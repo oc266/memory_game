@@ -38,13 +38,22 @@ function shuffle(array) {
  */
 
 const allCards = document.querySelectorAll('.card');
+const moveCounter = document.querySelector('.moves');
 let openCards = [];
+let moves = 0;
 
 allCards.forEach(function(card) {
   card.addEventListener('click', function(evt) {
     if (!card.classList.contains('open') && !card.classList.contains('show') && !card.classList.contains('match')) {
       card.classList.add('open', 'show');
       openCards.push(card);
+      moves = moves + 1;
+      if (moves === 1) {
+        moveCounter.textContent = '1 Move';
+      }
+      else {
+        moveCounter.textContent = moves + ' Moves';
+      };
     };
     if (openCards.length >= 2) {
       setTimeout(function () {
