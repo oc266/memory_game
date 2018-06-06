@@ -19,7 +19,8 @@ const starDisplay = document.querySelector('.stars');
 const container = document.querySelector('.container');
 let newGameButton = document.querySelector('.restart');
 let gameTime = document.querySelector('.currentTime');
-
+let minutesElapsed = '';
+let secondsElapsed = '';
 
 /*
  * A timer function
@@ -27,8 +28,6 @@ let gameTime = document.querySelector('.currentTime');
 function timer() {
   let minutes = 0;
   let seconds = 0;
-  let minutesElapsed = '';
-  let secondsElapsed = '';
   let timeElapsed = setInterval(function() {
     seconds = seconds + 1;
     if (seconds == 60) {
@@ -51,26 +50,7 @@ function timer() {
   }, 1000);
 };
 
-// function timer() {
-//     let minutes = 0;
-//     let seconds = 0;
-//     gameInterval = setInterval(function () {
-//         seconds = parseInt(seconds, 10) + 1;
-//         minutes = parseInt(minutes, 10);
-//         if (seconds >= 60) {
-//             minutes += 1;
-//             seconds = 0;
-//         }
-//
-//         seconds = seconds < 10 ? "0" + seconds : seconds;
-//         minutes = minutes < 10 ? "0" + minutes : minutes;
-//
-//         time.innerHTML = minutes + ":" + seconds;
-//         lastTime.textContent = time.textContent;
-//         // console.log(time,"hellooooo are you there????");
-//     }, 1000);
-// }
-//
+
 // function endOfGame() {
 //     clearInterval(gameInterval);
 // }
@@ -172,13 +152,14 @@ function prepareGrid() {
             // Increment the match counter by 1
             matchedPairs = matchedPairs + 1;
 
-            // If all pairs have been matched then display a congratulatory message
+            // If all pairs have been matched then display a congratulatory message, stop timer
             if (matchedPairs === 1) {
               let victoryHTML = document.createElement('div');
               victoryHTML.classList.add('container');
               let victoryText = '<h1>Congratulations, you defeated the matching game!</h1>';
               victoryText = `${victoryText} <h2>You took ${moves} moves</h2>`;
-              victoryText = `${victoryText} <h2>With a star rating of ${starRating} stars`;
+              victoryText = `${victoryText} <h2>With a star rating of ${starRating} stars</h2>`;
+              victoryText = `${victoryText} <h4>You spent ${minutesElapsed} minutes and ${secondsElapsed} seconds</h2>`;
               victoryHTML.insertAdjacentHTML('beforeEnd', victoryText);
               let victoryButton = '<button type="button">Play again</button>';
               victoryHTML.insertAdjacentHTML('beforeEnd', victoryButton);
