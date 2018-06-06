@@ -11,6 +11,9 @@ const cards = ['fa-diamond', 'fa-diamond',
                'fa-bomb', 'fa-bomb',
                ];
 
+const moveCounter = document.querySelector('.moves');
+const starRating = document.querySelector('.stars');
+
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -28,28 +31,42 @@ function shuffle(array) {
         temporaryValue = array[currentIndex];
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;
-    }
+    };
 
     return array;
-}
+};
 
 // A function to set up the page
 // Shuffles the deck and lays the shuffled cards in order
-function shuffleCards() {
+// Reset the move counter to zero and the star rating to three
+function setUpNewGame() {
+  // Shuffle deck and re-deal cards
   shuffle(cards);
   let deckHTML = document.createElement('ul');
   deckHTML.classList.add('deck');
   let deckHTMLToAdd = '';
   cards.forEach(function(card) {
-    newCard = `<li class="card"><i class="fa ${card}"></i></li>`
+    newCard = `<li class="card"><i class="fa ${card}"></i></li>`;
     deckHTMLToAdd = deckHTMLToAdd + newCard;
   });
   deckHTML.insertAdjacentHTML('beforeEnd', deckHTMLToAdd);
   const oldCards = document.querySelector('.deck');
   oldCards.replaceWith(deckHTML);
+
+  // Reset move counter
+  moveCounter.textContent = '0 Moves';
+
+  // Reset star rating
+  let stars = starRating.querySelectorAll('.fa');
+  stars.forEach(function(star) {
+    if (!star.classList.contains('fa-star')) {
+      star.classList.add('fa-star');
+    };
+  });
+
 };
 
-ShuffleCards();
+setUpNewGame();
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -63,7 +80,6 @@ ShuffleCards();
  */
 
 const allCards = document.querySelectorAll('.card');
-const moveCounter = document.querySelector('.moves');
 let openCards = [];
 let moves = 0;
 
@@ -74,6 +90,9 @@ allCards.forEach(function(card) {
     if (!card.classList.contains('open') && !card.classList.contains('show') && !card.classList.contains('match')) {
       card.classList.add('open', 'show');
       openCards.push(card);
+
+      // Increment move counter and check star star rating
+      // less than or equal to 15 three stars, 20 two stars, 25 one star
       moves = moves + 1;
       if (moves === 1) {
         moveCounter.textContent = '1 Move';
@@ -81,6 +100,7 @@ allCards.forEach(function(card) {
       else {
         moveCounter.textContent = moves + ' Moves';
       };
+
     };
     // If two cards have been turned check whether they match
     if (openCards.length >= 2) {
@@ -89,7 +109,6 @@ allCards.forEach(function(card) {
           card.classList.remove('open', 'show');
         });
         // If cards match leave unturned and change background color
-        console.log(openCards[0].querySelector('.fa'));
         if (openCards[0].querySelector('.fa').classList.value === openCards[1].querySelector('.fa').classList.value) {
           openCards.forEach(function(card) {
             card.classList.add('match');
