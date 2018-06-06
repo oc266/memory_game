@@ -74,6 +74,7 @@ function prepareGrid() {
   const allCards = document.querySelectorAll('.card');
   let openCards = [];
   let moves = 0;
+  let matchedPairs = 0;
 
   allCards.forEach(function(card) {
     card.addEventListener('click', function(evt) {
@@ -83,6 +84,9 @@ function prepareGrid() {
         card.classList.add('open', 'show');
         openCards.push(card);
 
+      };
+      // If two cards have been turned check whether they match
+      if (openCards.length >= 2) {
         // Increment move counter and check star star rating
         // less than or equal to 15 three stars, 20 two stars, 25 one star
         moves = moves + 1;
@@ -92,14 +96,10 @@ function prepareGrid() {
         else {
           moveCounter.textContent = moves + ' Moves';
         };
-        if (moves === 21 || moves === 26 || moves === 31) {
+        if (moves === 11 || moves === 16 || moves === 21) {
           let stars = starRating.querySelectorAll('.fa-star');
           stars[stars.length - 1].classList.remove('fa-star');
         };
-
-      };
-      // If two cards have been turned check whether they match
-      if (openCards.length >= 2) {
         setTimeout(function (){
           openCards.forEach(function(card) {
             card.classList.remove('open', 'show');
@@ -109,6 +109,12 @@ function prepareGrid() {
             openCards.forEach(function(card) {
               card.classList.add('match');
             });
+
+            // Increment the match counter by 1
+            matchedPairs = matchedPairs + 1;
+            if (matchedPairs === 8) {
+              document.querySelector('h1').textContent = "Winner";
+            };
           }
           else {
             openCards.forEach(function(card) {
