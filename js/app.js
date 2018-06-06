@@ -15,8 +15,9 @@ const cards = ['fa-diamond', 'fa-diamond',
  * Declare global variables
  */
 const moveCounter = document.querySelector('.moves');
-const starRating = document.querySelector('.stars');
-const newGameButton = document.querySelector('.restart');
+const starDisplay = document.querySelector('.stars');
+let newGameButton = document.querySelector('.restart');
+const container = document.querySelector('.container');
 
 /*
  * Display the cards on the page
@@ -61,7 +62,7 @@ function setUpNewGame() {
   moveCounter.textContent = '0 Moves';
 
   // Reset star rating
-  let stars = starRating.querySelectorAll('.fa');
+  let stars = starDisplay.querySelectorAll('.fa');
   stars.forEach(function(star) {
     if (!star.classList.contains('fa-star')) {
       star.classList.add('fa-star');
@@ -74,6 +75,7 @@ function prepareGrid() {
   const allCards = document.querySelectorAll('.card');
   let openCards = [];
   let moves = 0;
+  let starRating = 0;
   let matchedPairs = 0;
 
   allCards.forEach(function(card) {
@@ -97,7 +99,7 @@ function prepareGrid() {
           moveCounter.textContent = moves + ' Moves';
         };
         if (moves === 11 || moves === 16 || moves === 21) {
-          let stars = starRating.querySelectorAll('.fa-star');
+          let stars = starDisplay.querySelectorAll('.fa-star');
           stars[stars.length - 1].classList.remove('fa-star');
         };
         setTimeout(function (){
@@ -112,8 +114,18 @@ function prepareGrid() {
 
             // Increment the match counter by 1
             matchedPairs = matchedPairs + 1;
-            if (matchedPairs === 8) {
-              document.querySelector('h1').textContent = "Winner";
+
+            // If all pairs have been matched then display a congratulatory message
+            if (matchedPairs === 1) {
+              let victoryHTML = document.createElement('div');
+              victoryHTML.classList.add('container');
+              let victoryText = '<h1>Congratulations, you defeated the matching game!</h1>';
+              victoryText = `${victoryText} <h2>You took ${moves} moves</h2>`;
+              victoryText = `${victoryText} <h2>With a star rating of ${starRating} stars`;
+              victoryHTML.insertAdjacentHTML('beforeEnd', victoryText);
+              let victoryButton = '<button type="button">Play again</button>';
+              victoryHTML.insertAdjacentHTML('beforeEnd', victoryButton);
+              container.replaceWith(victoryHTML);
             };
           }
           else {
