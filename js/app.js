@@ -11,8 +11,12 @@ const cards = ['fa-diamond', 'fa-diamond',
                'fa-bomb', 'fa-bomb',
                ];
 
+/*
+ * Declare global variables
+ */
 const moveCounter = document.querySelector('.moves');
 const starRating = document.querySelector('.stars');
+const newGameButton = document.querySelector('.restart');
 
 /*
  * Display the cards on the page
@@ -32,7 +36,6 @@ function shuffle(array) {
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;
     };
-
     return array;
 };
 
@@ -40,6 +43,7 @@ function shuffle(array) {
 // Shuffles the deck and lays the shuffled cards in order
 // Reset the move counter to zero and the star rating to three
 function setUpNewGame() {
+
   // Shuffle deck and re-deal cards
   shuffle(cards);
   let deckHTML = document.createElement('ul');
@@ -66,7 +70,61 @@ function setUpNewGame() {
 
 };
 
+function prepareGrid() {
+  const allCards = document.querySelectorAll('.card');
+  let openCards = [];
+  let moves = 0;
+
+  allCards.forEach(function(card) {
+    card.addEventListener('click', function(evt) {
+
+      // If card is not turned yet, turn and add to list of open cards
+      if (!card.classList.contains('open') && !card.classList.contains('show') && !card.classList.contains('match')) {
+        card.classList.add('open', 'show');
+        openCards.push(card);
+
+        // Increment move counter and check star star rating
+        // less than or equal to 15 three stars, 20 two stars, 25 one star
+        moves = moves + 1;
+        if (moves === 1) {
+          moveCounter.textContent = '1 Move';
+        }
+        else {
+          moveCounter.textContent = moves + ' Moves';
+        };
+        if (moves === 21 || moves === 26 || moves === 31) {
+          let stars = starRating.querySelectorAll('.fa-star');
+          stars[stars.length - 1].classList.remove('fa-star');
+        };
+
+      };
+      // If two cards have been turned check whether they match
+      if (openCards.length >= 2) {
+        setTimeout(function (){
+          openCards.forEach(function(card) {
+            card.classList.remove('open', 'show');
+          });
+          // If cards match leave unturned and change background color
+          if (openCards[0].querySelector('.fa').classList.value === openCards[1].querySelector('.fa').classList.value) {
+            openCards.forEach(function(card) {
+              card.classList.add('match');
+            });
+          }
+          else {
+            openCards.forEach(function(card) {
+              card.classList.add('no_match');
+            });
+          };
+          openCards = [];
+        }, 500);
+      };
+    });
+  });
+};
+
+
 setUpNewGame();
+prepareGrid();
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -79,54 +137,8 @@ setUpNewGame();
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
-
-
-const allCards = document.querySelectorAll('.card');
-let openCards = [];
-let moves = 0;
-
-allCards.forEach(function(card) {
-  card.addEventListener('click', function(evt) {
-    // If card is not turned yet, turn and add to list of open cards
-    // Increment and update the move counter
-    if (!card.classList.contains('open') && !card.classList.contains('show') && !card.classList.contains('match')) {
-      card.classList.add('open', 'show');
-      openCards.push(card);
-
-      // Increment move counter and check star star rating
-      // less than or equal to 15 three stars, 20 two stars, 25 one star
-      moves = moves + 1;
-      if (moves === 1) {
-        moveCounter.textContent = '1 Move';
-      }
-      else {
-        moveCounter.textContent = moves + ' Moves';
-      };
-      if (moves === 21 || moves === 26 || moves === 31) {
-        let stars = starRating.querySelectorAll('.fa-star');
-        stars[stars.length - 1].classList.remove('fa-star');
-      };
-
-    };
-    // If two cards have been turned check whether they match
-    if (openCards.length >= 2) {
-      setTimeout(function (){
-        openCards.forEach(function(card) {
-          card.classList.remove('open', 'show');
-        });
-        // If cards match leave unturned and change background color
-        if (openCards[0].querySelector('.fa').classList.value === openCards[1].querySelector('.fa').classList.value) {
-          openCards.forEach(function(card) {
-            card.classList.add('match');
-          });
-        }
-        else {
-          openCards.forEach(function(card) {
-            card.classList.add('no_match');
-          });
-        };
-        openCards = [];
-      }, 500);
-    };
-  });
+// Set up a new game if the new game button is pressed
+newGameButton.addEventListener('click', function(evt) {
+  setUpNewGame();
+  prepareGrid();
 });
