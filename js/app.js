@@ -16,8 +16,65 @@ const cards = ['fa-diamond', 'fa-diamond',
  */
 const moveCounter = document.querySelector('.moves');
 const starDisplay = document.querySelector('.stars');
-let newGameButton = document.querySelector('.restart');
 const container = document.querySelector('.container');
+let newGameButton = document.querySelector('.restart');
+let gameTime = document.querySelector('.currentTime');
+
+
+/*
+ * A timer function
+ */
+function timer() {
+  let minutes = 0;
+  let seconds = 0;
+  let minutesElapsed = '';
+  let secondsElapsed = '';
+  let timeElapsed = setInterval(function() {
+    seconds = seconds + 1;
+    if (seconds == 60) {
+      minutes = minutes + 1;
+      seconds = 0
+    };
+    if (seconds <= 10) {
+      secondsElapsed = `0${seconds}`;
+    }
+    else {
+      secondsElapsed = `${seconds}`;
+    };
+    if (minutes <= 10) {
+      minutesElapsed = `0${minutes}`;
+    }
+    else {
+      minutesElapsed = `${minutes}`;
+    };
+    gameTime.textContent = `${minutesElapsed}:${secondsElapsed}`;
+  }, 1000);
+};
+
+// function timer() {
+//     let minutes = 0;
+//     let seconds = 0;
+//     gameInterval = setInterval(function () {
+//         seconds = parseInt(seconds, 10) + 1;
+//         minutes = parseInt(minutes, 10);
+//         if (seconds >= 60) {
+//             minutes += 1;
+//             seconds = 0;
+//         }
+//
+//         seconds = seconds < 10 ? "0" + seconds : seconds;
+//         minutes = minutes < 10 ? "0" + minutes : minutes;
+//
+//         time.innerHTML = minutes + ":" + seconds;
+//         lastTime.textContent = time.textContent;
+//         // console.log(time,"hellooooo are you there????");
+//     }, 1000);
+// }
+//
+// function endOfGame() {
+//     clearInterval(gameInterval);
+// }
+
 
 /*
  * Display the cards on the page
@@ -143,6 +200,7 @@ function prepareGrid() {
 
 setUpNewGame();
 prepareGrid();
+timer();
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -159,4 +217,5 @@ prepareGrid();
 newGameButton.addEventListener('click', function(evt) {
   setUpNewGame();
   prepareGrid();
+  timer();
 });
