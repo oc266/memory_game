@@ -79,6 +79,8 @@ setUpNewGame();
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
+
+
 const allCards = document.querySelectorAll('.card');
 let openCards = [];
 let moves = 0;
@@ -99,6 +101,10 @@ allCards.forEach(function(card) {
       }
       else {
         moveCounter.textContent = moves + ' Moves';
+      };
+      if (moves === 21 || moves === 26 || moves === 31) {
+        let stars = starRating.querySelectorAll('.fa-star');
+        stars[stars.length - 1].classList.remove('fa-star');
       };
 
     };
