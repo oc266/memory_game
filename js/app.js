@@ -200,26 +200,20 @@ function prepareGrid() {
   let openCards = [];
   let moves = 0;
   let matchedPairs = 0;
-  let firstCardTurned = 0;
-  let secondCardTurned = 0;
+  let bothCardsTurned = 0;
 
   allCards.forEach(function(card) {
     card.addEventListener('click', function(evt) {
 
-      console.log(firstCardTurned);
-      console.log(secondCardTurned);
+      // Only turn over cards if zero or one cards have been turned so far
+      if (bothCardsTurned === 0) {
 
-      if (firstCardTurned === 0 || secondCardTurned === 0) {
         // If card is not turned yet, turn and add to list of open cards
         revealCard(card, openCards);
 
-        if (openCards.length === 1) {
-          firstCardTurned = 1;
-        };
-
         // If two cards have been turned then increment the move counter and check whether the cards match
         if (openCards.length === 2) {
-          secondCardTurned = 1;
+          bothCardsTurned = 1;
           moves++;
           incrementMoveCounter(moves);
           setTimeout(function (){
@@ -228,9 +222,8 @@ function prepareGrid() {
             // Empty the array of open cards
             openCards = [];
 
-            // After the cards turn back over or match, reset these variables
-            firstCardTurned = 0;
-            secondCardTurned = 0;
+            // After the cards turn back over or match, reset this variables
+            bothCardsTurned = 0;
           }, 2000);
         };
       };
