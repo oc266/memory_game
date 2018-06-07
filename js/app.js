@@ -185,7 +185,7 @@ function checkForMatch(openCards, matchedPairs, moves) {
     matchedPairs = matchedPairs + 1;
 
     // If all pairs have been matched then display a congratulatory message
-    if (matchedPairs === 1) {
+    if (matchedPairs === 8) {
       setTimeout(function() {
         displayVictoryMessage(moves);
       }, 1000);
