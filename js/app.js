@@ -1,5 +1,5 @@
 /*
- * Create a list that holds all of your cards
+ * Create a list that holds of the cards
  */
 const cards = ['fa-diamond', 'fa-diamond',
                'fa-paper-plane-o', 'fa-paper-plane-o',
@@ -19,6 +19,7 @@ const starDisplay = document.querySelector('.stars');
 const container = document.querySelector('.container');
 let newGameButton = document.querySelector('.restart');
 let gameTime = document.querySelector('.currentTime');
+let timeElapsed;
 let minutesElapsed = '';
 let secondsElapsed = '';
 
@@ -28,19 +29,19 @@ let secondsElapsed = '';
 function timer() {
   let minutes = 0;
   let seconds = 0;
-  let timeElapsed = setInterval(function() {
+  timeElapsed = setInterval(function() {
     seconds = seconds + 1;
     if (seconds == 60) {
       minutes = minutes + 1;
       seconds = 0
     };
-    if (seconds <= 10) {
+    if (seconds < 10) {
       secondsElapsed = `0${seconds}`;
     }
     else {
       secondsElapsed = `${seconds}`;
     };
-    if (minutes <= 10) {
+    if (minutes < 10) {
       minutesElapsed = `0${minutes}`;
     }
     else {
@@ -104,41 +105,90 @@ function setUpNewGame() {
     if (!star.classList.contains('fa-star')) {
       star.classList.add('fa-star');
     };
+    if (star.classList.contains('fa-star-o')) {
+      star.classList.remove('fa-star-o');
+    };
   });
 
+};
+
+// A function that, if card is not turned yet, turns it and adds to list of open cards
+function revealCard(card, openCards) {
+  if (!card.classList.contains('open') && !card.classList.contains('show') && !card.classList.contains('match')) {
+    card.classList.add('open', 'show');
+    openCards.push(card);
+  };
+};
+
+// A function to increment the move moveCounter
+function incrementMoveCounter(moves) {
+  if (moves === 1) {
+    moveCounter.textContent = '1 Move';
+  }
+  else {
+    moveCounter.textContent = moves + ' Moves';
+  };
+  if (moves === 5 || moves === 16 || moves === 21) {
+    removeStar();
+  };
+};
+
+// A function to remove a star if necessary
+function removeStar(starRating) {
+  let stars = starDisplay.querySelectorAll('.fa-star');
+  stars[stars.length - 1].classList.remove('fa-star');
+  stars[stars.length - 1].classList.add('fa-star-o');
+};
+
+// A function to either turn cards back over if they don't match
+// Or to change the backgroun color and leave the cards overturned if they do match
+
+
+// A function which displays a vicotry message including a button to start a new game
+function displayVictoryMessage(moves) {
+  // Get the star rating for the game
+  let starRating = starDisplay.querySelectorAll('.fa-star').length;
+
+  // Create the HTML for the victory message
+  let victoryHTML = document.createElement('div');
+  victoryHTML.classList.add('container');
+  let victoryText = '<h1>Congratulations, you defeated the matching game!</h1>';
+  victoryText = `${victoryText} <h2>You took ${moves} moves</h2>`;
+  victoryText = `${victoryText} <h2>With a star rating of ${starRating} stars</h2>`;
+  victoryText = `${victoryText} <h4>You spent ${minutesElapsed} minutes and ${secondsElapsed} seconds</h2>`;
+  victoryHTML.insertAdjacentHTML('beforeEnd', victoryText);
+  let victoryButton = '<button type="button" class="replay">Play again</button>';
+  victoryHTML.insertAdjacentHTML('beforeEnd', victoryButton);
+
+  // Replace the content of the page with the victory message
+  container.replaceWith(victoryHTML);
+
+  // Add an event listener to the replay button to start a new game
+  replayButton = document.querySelector('.replay');
+  replayButton.addEventListener('click', function(evt) {
+    victoryHTML.replaceWith(container);
+    startGame();
+  });
 };
 
 function prepareGrid() {
   const allCards = document.querySelectorAll('.card');
   let openCards = [];
   let moves = 0;
-  let starRating = 0;
   let matchedPairs = 0;
 
   allCards.forEach(function(card) {
     card.addEventListener('click', function(evt) {
 
       // If card is not turned yet, turn and add to list of open cards
-      if (!card.classList.contains('open') && !card.classList.contains('show') && !card.classList.contains('match')) {
-        card.classList.add('open', 'show');
-        openCards.push(card);
+      revealCard(card, openCards);
 
-      };
       // If two cards have been turned check whether they match
       if (openCards.length >= 2) {
         // Increment move counter and check star star rating
-        // less than or equal to 15 three stars, 20 two stars, 25 one star
-        moves = moves + 1;
-        if (moves === 1) {
-          moveCounter.textContent = '1 Move';
-        }
-        else {
-          moveCounter.textContent = moves + ' Moves';
-        };
-        if (moves === 11 || moves === 16 || moves === 21) {
-          let stars = starDisplay.querySelectorAll('.fa-star');
-          stars[stars.length - 1].classList.remove('fa-star');
-        };
+        moves++;
+        incrementMoveCounter(moves);
+
         setTimeout(function (){
           openCards.forEach(function(card) {
             card.classList.remove('open', 'show');
@@ -154,16 +204,7 @@ function prepareGrid() {
 
             // If all pairs have been matched then display a congratulatory message, stop timer
             if (matchedPairs === 1) {
-              let victoryHTML = document.createElement('div');
-              victoryHTML.classList.add('container');
-              let victoryText = '<h1>Congratulations, you defeated the matching game!</h1>';
-              victoryText = `${victoryText} <h2>You took ${moves} moves</h2>`;
-              victoryText = `${victoryText} <h2>With a star rating of ${starRating} stars</h2>`;
-              victoryText = `${victoryText} <h4>You spent ${minutesElapsed} minutes and ${secondsElapsed} seconds</h2>`;
-              victoryHTML.insertAdjacentHTML('beforeEnd', victoryText);
-              let victoryButton = '<button type="button">Play again</button>';
-              victoryHTML.insertAdjacentHTML('beforeEnd', victoryButton);
-              container.replaceWith(victoryHTML);
+                displayVictoryMessage(moves);
             };
           }
           else {
@@ -178,10 +219,17 @@ function prepareGrid() {
   });
 };
 
+// A function to start a new game
+// To be called upon loading the page, as well as when a restart button is clicked by the user
+function startGame() {
+  setUpNewGame();
+  prepareGrid();
+  clearInterval(timeElapsed);
+  timer();
+};
 
-setUpNewGame();
-prepareGrid();
-timer();
+// Start the game on loading the page
+startGame();
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -196,7 +244,5 @@ timer();
 
 // Set up a new game if the new game button is pressed
 newGameButton.addEventListener('click', function(evt) {
-  setUpNewGame();
-  prepareGrid();
-  timer();
+  startGame();
 });
