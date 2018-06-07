@@ -5,8 +5,7 @@ The aim is to match all pairs of cards by clicking on them. Once all eight pairs
 
 ## Installing from source
 
-1. Clone the following repo:
- * git clone https://github.com/oc266/memory_game.git
+1. Clone the repo
 2. Open the file index.html in your browser.
 3. Get matching
 
