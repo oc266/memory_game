@@ -11,6 +11,7 @@ const cards = ['fa-diamond', 'fa-diamond',
                'fa-bomb', 'fa-bomb',
                ];
 
+
 /*
  * Declare global variables
  */
@@ -22,6 +23,7 @@ let gameTime = document.querySelector('.currentTime');
 let timeElapsed;
 let minutesElapsed = '';
 let secondsElapsed = '';
+
 
 /*
  * A timer function
@@ -52,18 +54,6 @@ function timer() {
 };
 
 
-// function endOfGame() {
-//     clearInterval(gameInterval);
-// }
-
-
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
-
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
     let currentIndex = array.length, temporaryValue, randomIndex;
@@ -78,8 +68,10 @@ function shuffle(array) {
     return array;
 };
 
+
 // A function to set up the page
-// Shuffles the deck and lays the shuffled cards in order
+// Shuffles the deck using the shuffle function
+// Creates HTML or each card and lays the shuffled cards in order by adding HTML to the page
 // Reset the move counter to zero and the star rating to three
 function setUpNewGame() {
 
@@ -109,8 +101,8 @@ function setUpNewGame() {
       star.classList.remove('fa-star-o');
     };
   });
-
 };
+
 
 // A function that, if card is not turned yet, turns it and adds to list of open cards
 function revealCard(card, openCards) {
@@ -119,6 +111,7 @@ function revealCard(card, openCards) {
     openCards.push(card);
   };
 };
+
 
 // A function to increment the move moveCounter
 function incrementMoveCounter(moves) {
@@ -133,6 +126,7 @@ function incrementMoveCounter(moves) {
   };
 };
 
+
 // A function to remove a star if necessary
 function removeStar(starRating) {
   let stars = starDisplay.querySelectorAll('.fa-star');
@@ -140,12 +134,40 @@ function removeStar(starRating) {
   stars[stars.length - 1].classList.add('fa-star-o');
 };
 
+
 // A function to either turn cards back over if they don't match
 // Or to change the backgroun color and leave the cards overturned if they do match
+// Parameters are an array of open cards, the number of pairs matched so far and the number of moves taken
+// Returns the number of pairs matched (which gets incremented by 1 if the open cards match)
+function checkForMatch(openCards, matchedPairs, moves) {
+  openCards.forEach(function(card) {
+    card.classList.remove('open', 'show');
+  });
+  // If cards match leave unturned and change background color
+  if (openCards[0].querySelector('.fa').classList.value === openCards[1].querySelector('.fa').classList.value) {
+    openCards.forEach(function(card) {
+      card.classList.add('match');
+    });
 
+    // Increment the match counter by 1
+    matchedPairs = matchedPairs + 1;
+
+    // If all pairs have been matched then display a congratulatory message, stop timer
+    if (matchedPairs === 1) {
+        displayVictoryMessage(moves);
+    };
+  }
+  else {
+    openCards.forEach(function(card) {
+      card.classList.add('no_match');
+    });
+  };
+  return matchedPairs;
+};
 
 // A function which displays a vicotry message including a button to start a new game
 function displayVictoryMessage(moves) {
+
   // Get the star rating for the game
   let starRating = starDisplay.querySelectorAll('.fa-star').length;
 
@@ -163,7 +185,7 @@ function displayVictoryMessage(moves) {
   // Replace the content of the page with the victory message
   container.replaceWith(victoryHTML);
 
-  // Add an event listener to the replay button to start a new game
+  // Add an event listener to the replay button to start a new game if desired
   replayButton = document.querySelector('.replay');
   replayButton.addEventListener('click', function(evt) {
     victoryHTML.replaceWith(container);
@@ -171,6 +193,8 @@ function displayVictoryMessage(moves) {
   });
 };
 
+
+// A function to set up all the game logic, to be called at the start of any game
 function prepareGrid() {
   const allCards = document.querySelectorAll('.card');
   let openCards = [];
@@ -183,35 +207,12 @@ function prepareGrid() {
       // If card is not turned yet, turn and add to list of open cards
       revealCard(card, openCards);
 
-      // If two cards have been turned check whether they match
-      if (openCards.length >= 2) {
-        // Increment move counter and check star star rating
+      // If two cards have been turned then increment the move counter and check whether the cards match
+      if (openCards.length === 2) {
         moves++;
         incrementMoveCounter(moves);
-
         setTimeout(function (){
-          openCards.forEach(function(card) {
-            card.classList.remove('open', 'show');
-          });
-          // If cards match leave unturned and change background color
-          if (openCards[0].querySelector('.fa').classList.value === openCards[1].querySelector('.fa').classList.value) {
-            openCards.forEach(function(card) {
-              card.classList.add('match');
-            });
-
-            // Increment the match counter by 1
-            matchedPairs = matchedPairs + 1;
-
-            // If all pairs have been matched then display a congratulatory message, stop timer
-            if (matchedPairs === 1) {
-                displayVictoryMessage(moves);
-            };
-          }
-          else {
-            openCards.forEach(function(card) {
-              card.classList.add('no_match');
-            });
-          };
+          matchedPairs = checkForMatch(openCards, matchedPairs, moves);
           openCards = [];
         }, 500);
       };
