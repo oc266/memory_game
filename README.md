@@ -1,20 +1,27 @@
 # Memory Game Project
 
-## Table of Contents
+This memory game was made as part of Udacity's Front End Nanodegree Scholarship.
+The aim is to match all pairs of cards by clicking on them. Once all eight pairs have been matched, a victory message is displayed with some score statistics.
 
-* [Instructions](#instructions)
-* [Contributing](#contributing)
+## Installing from source
 
-## Instructions
+1. Clone the following repo:
+ * git clone https://github.com/oc266/memory_game.git
+2. Open the file index.html in your browser.
+3. Get matching
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
+## How to Play
+* The aim of the game is to find all eight pairs.
+1. Click on two cards and see if they match.
+2. Tactically continue clicking to find all eight matches.
+3. You can restart the game at any point, by clicking on the restart button.
+4. Your moves, star rating and a timer are displayed.
+5. Once you find all eight matches, you win the game - congratulations!
+6. Now, click the play again button to try to beat your score!
 
-To get started, open `js/app.js` and start building out the app's functionality
 
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
+## Built with the help of:
+* Starter code provided by Udacity (https://github.com/udacity/fend-project-memory-game)
 
-## Contributing
-
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
-
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+## Author
+* Oliver Critchifled
