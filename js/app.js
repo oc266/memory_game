@@ -153,7 +153,7 @@ function checkForMatch(openCards, matchedPairs, moves) {
     matchedPairs = matchedPairs + 1;
 
     // If all pairs have been matched then display a congratulatory message, stop timer
-    if (matchedPairs === 1) {
+    if (matchedPairs === 8) {
         displayVictoryMessage(moves);
     };
   }
@@ -161,6 +161,11 @@ function checkForMatch(openCards, matchedPairs, moves) {
     openCards.forEach(function(card) {
       card.classList.add('no_match');
     });
+    setTimeout(function() {
+      openCards.forEach(function(card) {
+        card.classList.remove('no_match');
+      });
+    }, 1000);
   };
   return matchedPairs;
 };
@@ -177,7 +182,7 @@ function displayVictoryMessage(moves) {
   let victoryText = '<h1>Congratulations, you defeated the matching game!</h1>';
   victoryText = `${victoryText} <h2>You took ${moves} moves</h2>`;
   victoryText = `${victoryText} <h2>With a star rating of ${starRating} stars</h2>`;
-  victoryText = `${victoryText} <h4>You spent ${minutesElapsed} minutes and ${secondsElapsed} seconds</h2>`;
+  victoryText = `${victoryText} <h4>It took you ${minutesElapsed} minutes and ${secondsElapsed} seconds</h2>`;
   victoryHTML.insertAdjacentHTML('beforeEnd', victoryText);
   let victoryButton = '<button type="button" class="replay">Play again</button>';
   victoryHTML.insertAdjacentHTML('beforeEnd', victoryButton);
@@ -216,15 +221,16 @@ function prepareGrid() {
           bothCardsTurned = 1;
           moves++;
           incrementMoveCounter(moves);
-          setTimeout(function (){
-            matchedPairs = checkForMatch(openCards, matchedPairs, moves);
+          matchedPairs = checkForMatch(openCards, matchedPairs, moves);
 
-            // Empty the array of open cards
-            openCards = [];
+          // Empty the array of open cards
+          openCards = [];
 
-            // After the cards turn back over or match, reset this variables
+          // After the cards turn back over or match, reset this variables
+          setTimeout(function() {
             bothCardsTurned = 0;
-          }, 2000);
+          }, 1000);
+
         };
       };
     });
@@ -242,17 +248,6 @@ function startGame() {
 
 // Start the game on loading the page
 startGame();
-
-/*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
 
 // Set up a new game if the new game button is pressed
 newGameButton.addEventListener('click', function(evt) {
