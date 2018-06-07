@@ -10,7 +10,7 @@ The aim is to match all pairs of cards by clicking on them. Once all eight pairs
 3. Get matching
 
 ## How to Play
-* The aim of the game is to find all eight pairs.
+The aim of the game is to find all eight pairs.
 1. Click on two cards and see if they match.
 2. Tactically continue clicking to find all eight matches.
 3. You can restart the game at any point, by clicking on the restart button.
@@ -20,7 +20,7 @@ The aim is to match all pairs of cards by clicking on them. Once all eight pairs
 
 
 ## Built with the help of:
-* Starter code provided by Udacity (https://github.com/udacity/fend-project-memory-game)
+Starter code provided by Udacity (https://github.com/udacity/fend-project-memory-game)
 
 ## Author
-* Oliver Critchifled
+Oliver Critchifled
