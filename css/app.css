@@ -138,7 +138,7 @@ h1 {
   }
 
   25% {
-    transform: perspective(400px) rotate3d(0, 1, 0, 60deg);
+    transform: perspective(400px) rotate3d(0, 1, 0, 45deg);
     animation-timing-function: ease-in;
   }
 

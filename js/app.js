@@ -1,5 +1,7 @@
 /*
+ *
  * Create a list that holds of the cards
+ *
  */
 const cards = ['fa-diamond', 'fa-diamond',
                'fa-paper-plane-o', 'fa-paper-plane-o',
@@ -13,7 +15,9 @@ const cards = ['fa-diamond', 'fa-diamond',
 
 
 /*
+ *
  * Declare global variables
+ *
  */
 const moveCounter = document.querySelector('.moves');
 const starDisplay = document.querySelector('.stars');
@@ -26,16 +30,24 @@ let secondsElapsed = '';
 
 
 /*
- * A timer function
+ *
+ * Functions
+ *
  */
+
+
+// A timer function to display time elapsed on the page
 function timer() {
+
+  // Declare local varibales
   let minutes = 0;
   let seconds = 0;
+
   timeElapsed = setInterval(function() {
     seconds = seconds + 1;
     if (seconds == 60) {
       minutes = minutes + 1;
-      seconds = 0
+      seconds = 0;
     };
     if (seconds < 10) {
       secondsElapsed = `0${seconds}`;
@@ -71,15 +83,18 @@ function shuffle(array) {
 
 // A function to set up the page
 // Shuffles the deck using the shuffle function
-// Creates HTML or each card and lays the shuffled cards in order by adding HTML to the page
-// Reset the move counter to zero and the star rating to three
+// Creates HTML for each card and lays the shuffled cards by adding HTML to the page
+// Resets the move counter to zero and the star rating to three
 function setUpNewGame() {
+
+  // Declare local variables
+  let deckHTML = document.createElement('ul');
+  let deckHTMLToAdd = '';
+  let newCard = '';
 
   // Shuffle deck and re-deal cards
   shuffle(cards);
-  let deckHTML = document.createElement('ul');
   deckHTML.classList.add('deck');
-  let deckHTMLToAdd = '';
   cards.forEach(function(card) {
     newCard = `<li class="card"><i class="fa ${card}"></i></li>`;
     deckHTMLToAdd = deckHTMLToAdd + newCard;
@@ -105,6 +120,7 @@ function setUpNewGame() {
 
 
 // A function that, if card is not turned yet, turns it and adds to list of open cards
+// Parameters are the HTML of the card that has been clicked and an array of open cards
 function revealCard(card, openCards) {
   if (!card.classList.contains('open') && !card.classList.contains('show') && !card.classList.contains('match')) {
     card.classList.add('open', 'show');
@@ -113,7 +129,8 @@ function revealCard(card, openCards) {
 };
 
 
-// A function to increment the move moveCounter
+// A function to increment the move moveCounter and decrease star rating if necessary
+// Paremeter is an integer value of the number of moves made
 function incrementMoveCounter(moves) {
   if (moves === 1) {
     moveCounter.textContent = '1 Move';
@@ -128,10 +145,24 @@ function incrementMoveCounter(moves) {
 
 
 // A function to remove a star if necessary
-function removeStar(starRating) {
+function removeStar() {
   let stars = starDisplay.querySelectorAll('.fa-star');
   stars[stars.length - 1].classList.remove('fa-star');
   stars[stars.length - 1].classList.add('fa-star-o');
+};
+
+
+// A function to pulsate cards if there is no match
+// Parameter is an array of the open cards
+function pulsate(openCards) {
+  openCards.forEach(function(card) {
+    card.classList.add('no_match');
+  });
+  setTimeout(function() {
+    openCards.forEach(function(card) {
+      card.classList.remove('no_match');
+    });
+  }, 1000);
 };
 
 
@@ -143,6 +174,7 @@ function checkForMatch(openCards, matchedPairs, moves) {
   openCards.forEach(function(card) {
     card.classList.remove('open', 'show');
   });
+
   // If cards match leave unturned and change background color
   if (openCards[0].querySelector('.fa').classList.value === openCards[1].querySelector('.fa').classList.value) {
     openCards.forEach(function(card) {
@@ -152,46 +184,44 @@ function checkForMatch(openCards, matchedPairs, moves) {
     // Increment the match counter by 1
     matchedPairs = matchedPairs + 1;
 
-    // If all pairs have been matched then display a congratulatory message, stop timer
-    if (matchedPairs === 8) {
+    // If all pairs have been matched then display a congratulatory message
+    if (matchedPairs === 1) {
+      setTimeout(function() {
         displayVictoryMessage(moves);
+      }, 1000);
     };
   }
+
+  // If no match, then pulsate then turn cards back over
   else {
-    openCards.forEach(function(card) {
-      card.classList.add('no_match');
-    });
-    setTimeout(function() {
-      openCards.forEach(function(card) {
-        card.classList.remove('no_match');
-      });
-    }, 1000);
+    pulsate(openCards);
   };
   return matchedPairs;
 };
 
+
 // A function which displays a vicotry message including a button to start a new game
 function displayVictoryMessage(moves) {
 
-  // Get the star rating for the game
+  // Declare local variables
   let starRating = starDisplay.querySelectorAll('.fa-star').length;
+  let victoryHTML = document.createElement('div');
+  let victoryText = '';
 
   // Create the HTML for the victory message
-  let victoryHTML = document.createElement('div');
   victoryHTML.classList.add('container');
-  let victoryText = '<h1>Congratulations, you defeated the matching game!</h1>';
+  victoryText = '<h1>Congratulations, you defeated the matching game!</h1>';
   victoryText = `${victoryText} <h2>You took ${moves} moves</h2>`;
   victoryText = `${victoryText} <h2>With a star rating of ${starRating} stars</h2>`;
   victoryText = `${victoryText} <h4>It took you ${minutesElapsed} minutes and ${secondsElapsed} seconds</h2>`;
+  victoryText = `${victoryText} <button type="button" class="replay">Play again</button>`;
   victoryHTML.insertAdjacentHTML('beforeEnd', victoryText);
-  let victoryButton = '<button type="button" class="replay">Play again</button>';
-  victoryHTML.insertAdjacentHTML('beforeEnd', victoryButton);
 
   // Replace the content of the page with the victory message
   container.replaceWith(victoryHTML);
 
   // Add an event listener to the replay button to start a new game if desired
-  replayButton = document.querySelector('.replay');
+  let replayButton = document.querySelector('.replay');
   replayButton.addEventListener('click', function(evt) {
     victoryHTML.replaceWith(container);
     startGame();
@@ -201,12 +231,15 @@ function displayVictoryMessage(moves) {
 
 // A function to set up all the game logic, to be called at the start of any game
 function prepareGrid() {
+
+  // Declare local variables
   const allCards = document.querySelectorAll('.card');
   let openCards = [];
   let moves = 0;
   let matchedPairs = 0;
   let bothCardsTurned = 0;
 
+  // Add event listeners to each of the cards
   allCards.forEach(function(card) {
     card.addEventListener('click', function(evt) {
 
@@ -235,7 +268,13 @@ function prepareGrid() {
       };
     });
   });
+
+  // Event listener on the new game button to set up a new game if pressed
+  newGameButton.addEventListener('click', function(evt) {
+    startGame();
+  });
 };
+
 
 // A function to start a new game
 // To be called upon loading the page, as well as when a restart button is clicked by the user
@@ -246,10 +285,10 @@ function startGame() {
   timer();
 };
 
-// Start the game on loading the page
-startGame();
 
-// Set up a new game if the new game button is pressed
-newGameButton.addEventListener('click', function(evt) {
-  startGame();
-});
+/*
+ *
+ * Start the game on loading the page
+ *
+ */
+startGame();
