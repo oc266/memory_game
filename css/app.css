@@ -233,3 +233,103 @@ h1 {
     transform: scale3d(1, 1, 1);
   }
 }
+
+/*
+ * Responsive design
+ */
+
+@media screen and (max-width: 800px) {
+  h1 {
+    transition: 0.5s;
+    font-size: 2em;
+  }
+
+  .deck {
+    transition: 0.5s;
+    width: 450px;
+    min-height: 463px;
+    padding: 22px;
+    border-radius: 7px;
+    box-shadow: 8px 10px 14px 0 rgba(46, 61, 73, 0.5);
+    margin: 0 0 2em;
+  }
+  
+  .deck .card {
+    transition: 0.5s;
+    height: 85px;
+    width: 85px;
+    border-radius: 5.5px;
+    box-shadow: 3.5px 1.5px 14px 0 rgba(46, 61, 73, 0.5);
+  }
+  
+  .deck .card.show,
+  .deck .card.match,
+  .deck .card.no_match {
+    font-size: 22.5px;
+  }
+  
+  .score-panel {
+    transition: 0.5s;
+    font-size: 12px;
+    width: 235px;
+    margin-bottom: 7px;
+  }
+  
+  .score-panel .stars {
+    margin 0 3.5px 0 0;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  h1 {
+    transition: 0.5s;
+    font-size: 1.3em;
+  }
+
+  .deck {
+    transition: 0.5s;
+    width: 281px;
+    min-height: 290px;
+    padding: 14px;
+    border-radius: 4.3px;
+    box-shadow: 5px 6.5px 8.5px 0 rgba(46, 61, 73, 0.5);
+    margin: 0 0 1.3em;
+  }
+  
+  .deck .card {
+    transition: 0.5s;
+    height: 54px;
+    width: 54px;
+    border-radius: 3.5px;
+    box-shadow: 2px 0.9px 8.5px 0 rgba(46, 61, 73, 0.5);
+  }
+  
+  .deck .card.show,
+  .deck .card.match,
+  .deck .card.no_match {
+    font-size: 14px;
+  }
+  
+  .score-panel {
+    transition: 0.5s;
+    font-size: 8px;
+    width: 170px;
+    margin-bottom: 4.3px;
+  }
+  
+  .score-panel .stars {
+    margin 0 2.1px 0 0 ;
+  }
+  
+  .victory h1 {
+    font-size: 20px;
+  }
+  
+  .victory h2 {
+    font-size: 15px;
+  }
+  
+  .victory h4 {
+    font-size: 13px;
+  }
+}
