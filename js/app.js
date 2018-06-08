@@ -238,10 +238,15 @@ function prepareGrid() {
   let moves = 0;
   let matchedPairs = 0;
   let bothCardsTurned = 0;
+  let cardsTurned = 0;
 
   // Add event listeners to each of the cards
   allCards.forEach(function(card) {
     card.addEventListener('click', function(evt) {
+      cardsTurned++;
+      if (cardsTurned === 1) {
+        timer();
+      };
 
       // Only turn over cards if zero or one cards have been turned so far
       if (bothCardsTurned === 0) {
@@ -279,10 +284,10 @@ function prepareGrid() {
 // A function to start a new game
 // To be called upon loading the page, as well as when a restart button is clicked by the user
 function startGame() {
+  gameTime.textContent = '00:00';
+  clearInterval(timeElapsed);
   setUpNewGame();
   prepareGrid();
-  clearInterval(timeElapsed);
-  timer();
 };
 
 
