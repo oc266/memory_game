@@ -138,7 +138,7 @@ function incrementMoveCounter(moves) {
   else {
     moveCounter.textContent = moves + ' Moves';
   };
-  if (moves === 5 || moves === 16 || moves === 21) {
+  if (moves === 5 || moves === 16) {
     removeStar();
   };
 };
