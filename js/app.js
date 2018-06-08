@@ -209,8 +209,8 @@ function displayVictoryMessage(moves) {
   let victoryText = '';
 
   // Create the HTML for the victory message
-  victoryHTML.classList.add('container');
-  victoryText = '<h1>Congratulations, you defeated the matching game!</h1>';
+  victoryHTML.classList.add('container', 'victory');
+  victoryText = '<h1>Congratulations!</h1><h1>you defeated the matching game!</h1>';
   victoryText = `${victoryText} <h2>You took ${moves} moves</h2>`;
   victoryText = `${victoryText} <h2>With a star rating of ${starRating} stars</h2>`;
   victoryText = `${victoryText} <h4>It took you ${minutesElapsed} minutes and ${secondsElapsed} seconds</h2>`;
